@@ -1,6 +1,6 @@
-from repositories import BaseRepository
+from src.core.types.repositories import BaseRepository
 
-from issues.models import Issue
+from issues.dto import Issue
 
 class IssueRepository(BaseRepository[Issue]):
     file_name: str = 'issues_data.json'
