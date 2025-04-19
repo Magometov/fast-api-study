@@ -10,3 +10,4 @@ class User(SAModel):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     name: Mapped[str] = mapped_column(String(length=20))
     age: Mapped[int] = mapped_column(SmallInteger)
+    wallet_address: Mapped[str | None] = mapped_column(String(length=48), unique=True)
