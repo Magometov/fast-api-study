@@ -1,6 +1,7 @@
 [project]
 name = ""
 version = "0.0.1"
+requires-python = ">=3.12"
 dependencies = [
     "alembic==1.15.2",
     "fastapi==0.115.12",
@@ -12,6 +13,7 @@ dependencies = [
     "greenlet>=3.1.1",
     "pytoniq>=0.1.40",
     "httpx>=0.28.1",
+    "pyjwt>=2.10.1",
 ]
 
 [tool.uv]
@@ -21,7 +23,9 @@ package = false
 dev = [
     "black>=25.1.0",
     "ipython>=9.1.0",
+    "isort>=6.0.1",
     "mypy>=1.15.0",
+    "pre-commit>=4.2.0",
     "pytest>=8.3.5",
     "pytest-asyncio>=0.26.0",
     "ruff>=0.11.5",
@@ -29,4 +33,76 @@ dev = [
 
 [[tool.mypy.overrides]]
 module = "pytoniq"
+ignore_missing_imports = true
+
+[project.entry-points."flake8.extension"]
+WPS = "wemake_python_styleguide.checker:Checker"
+
+[project.entry-points."flake8.report"]
+wemake = "wemake_python_styleguide.formatter:WemakeFormatter"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+skip = ["migrations"]
+
+[tool.black]
+exclude = '''
+/(
+  | migrations
+  | .venv
+)/
+'''
+line_length = 120
+
+[tool.ruff]
+fix = true
+line-length = 120
+target-version = "py313"
+extend-exclude = [".venv", "venv", "migrations"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D",
+    "ANN",
+    "BLE001",
+    "FBT003",
+    "PLR0913",
+    "S101",
+    "COM812",
+    "ISC001",
+    "N806",
+    "UP037",
+    "S105",
+]
+external = [ "WPS" ]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = [
+    "fastapi.Depends",
+    "fastapi.params.Depends",
+    "fastapi.Query",
+    "fastapi.params.Query",
+]
+
+[tool.mypy]
+python_version = "3.13"
+plugins = ["sqlalchemy.ext.mypy.plugin"]
+exclude = ["migrations"]
+warn_unused_configs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unreachable = true
+warn_no_return = true
+namespace_packages = true
+explicit_package_bases = true
+disallow_untyped_defs = true
+disallow_untyped_calls = false
+allow_subclassing_any = true
+strict = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = ["asyncpg.*", "TonTools.*", "tonsdk.*", "apscheduler.*", "tvm_valuetypes.*", "pytonlib.*", "pytoniq.*", "pytoniq_core.*"]
 ignore_missing_imports = true

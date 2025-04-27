@@ -1,13 +1,15 @@
 from typing import Literal
-from pydantic_settings import BaseSettings, SettingsConfigDict
+
 from pydantic import BaseModel, PostgresDsn, SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 class DatabaseSettings(BaseModel):
-    host: str = '127.0.0.1'
+    host: str = "127.0.0.1"
     port: int = 5432
-    name: str = 'postgres'
-    username: str = 'postgres'
-    password: SecretStr = SecretStr('postgres')
+    name: str = "postgres"
+    username: str = "postgres"
+    password: SecretStr = SecretStr("postgres")
 
     def get_url(
         self,
@@ -25,12 +27,19 @@ class DatabaseSettings(BaseModel):
         return SecretStr(str(dsn))
 
 
+class JwtSettings(BaseModel):
+    secret_key: str = "changeme"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 60
+    refresh_token_expire_days: int = 7
+
+
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env', env_nested_delimiter='__')
+    model_config = SettingsConfigDict(env_file=".env", env_nested_delimiter="__")
 
-    cors: list[str] = ['http://127.0.0.1']
+    cors: list[str] = ["http://127.0.0.1"]
     db: DatabaseSettings = DatabaseSettings()
-
+    jwt: JwtSettings = JwtSettings()
 
 
 settings = Settings()

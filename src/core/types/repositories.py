@@ -1,7 +1,10 @@
+from collections.abc import Sequence
+
 from sqlalchemy import inspect, select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.core.db.base import SAModel
-from typing import Sequence
+
 
 class BaseRepository[_MT: SAModel]:
     _model: type[_MT]
@@ -28,4 +31,3 @@ class BaseRepository[_MT: SAModel]:
         await self._session.refresh(instance)
 
         return instance
-    
