@@ -1,5 +1,7 @@
+import sys
 from typing import Literal
 
+from loguru import logger
 from pydantic import BaseModel, PostgresDsn, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -37,9 +39,22 @@ class JwtSettings(BaseModel):
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_nested_delimiter="__")
 
+    debug: bool = True
     cors: list[str] = ["http://127.0.0.1"]
     db: DatabaseSettings = DatabaseSettings()
     jwt: JwtSettings = JwtSettings()
+    tonapi_url: str = "https://tonapi.io/"
 
 
 settings = Settings()
+
+# Logging Configuration
+logger.remove(0)
+logger.add(
+    sys.stderr,
+    format="<red>[{level}]</red> Message : <green>{message}</green> @ {time:YYYY-MM-DD HH:mm:ss}",
+    colorize=True,
+    level=("DEBUG" if settings.debug else "INFO"),
+    backtrace=True,
+    diagnose=True,
+)

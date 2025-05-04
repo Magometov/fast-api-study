@@ -6,9 +6,9 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.dependencies.db import get_async_session
+from src.modules.auth.dto import JWTResponse
 from src.modules.users.dependencies import CurrentWalletIDDep
 from src.modules.users.dto import (
-    JWTResponse,
     TokenRequest,
     UserCreateDTO,
     UserDTO,
@@ -21,8 +21,8 @@ from src.modules.users.models import User
 from src.modules.users.repositories import UserRepository
 from src.modules.users.utils import JWT
 
-UserRepoDep = Annotated[UserRepository, Depends(UserRepository)]
 AsyncSessionDep = Annotated[AsyncSession, Depends(get_async_session)]
+UserRepoDep = Annotated[UserRepository, Depends(UserRepository)]
 
 router = APIRouter(prefix="/users")
 
@@ -49,8 +49,8 @@ async def get_users_router(db_session: AsyncSessionDep) -> Sequence[User]:
     return await repo.get_all()
 
 
-@router.get("/{user_id}", response_model=UserDTO)
-async def get_user_router(user_id: int, db_session: AsyncSessionDep) -> User:
+@router.get("/{user_id}", response_model=UserDTO | None)
+async def get_user_router(user_id: int, db_session: AsyncSessionDep) -> User | None:
     repo = UserRepository(db_session)
     return await repo.get_by_id(user_id)
 

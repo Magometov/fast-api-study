@@ -10,7 +10,7 @@ from jwt.exceptions import (
 )
 
 from src.core.api.exceptions.common import AuthenticationHTTPException
-from src.modules.users.dto import JWTPayload
+from src.modules.auth.dto import JWTPayload
 from src.modules.users.utils import JWT
 
 users_security = HTTPBearer(auto_error=False)

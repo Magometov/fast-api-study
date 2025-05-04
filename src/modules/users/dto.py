@@ -1,21 +1,14 @@
-from datetime import datetime
-from typing import Annotated, Any
+from typing import Any
 
 import pytoniq
-from pydantic import BaseModel, ConfigDict, Field, RootModel, field_validator
-from typing_extensions import Doc
+from pydantic import Field, RootModel, field_validator
 
-
-class BaseDTO(BaseModel):
-    model_config = ConfigDict(
-        frozen=True,
-        from_attributes=True,
-    )
+from src.core.types.dto import BaseDTO
 
 
 class UserDTO(BaseDTO):
-    name: str = Field(description="Имя", max_length=20)
-    age: int = Field(description="Возраст", ge=18, le=80)
+    name: str | None = Field(description="Имя", max_length=20)
+    age: int | None = Field(description="Возраст", ge=18, le=80)
 
 
 class UserCreateDTO(UserDTO):
@@ -43,19 +36,8 @@ class UserReadDTO(BaseDTO):
 class UserListDTO(RootModel[list[UserDTO]]): ...
 
 
-class JWTPayload(BaseDTO):
-    wallet_id: Annotated[str, Doc("Internal User Wallet ID")]
-    exp: Annotated[datetime, Doc("Unix timestamp in seconds")]
-    token_type: Annotated[str, Doc("Token type: access or refresh")]
-
-
 class TokenRequest(BaseDTO):
     token: str
-
-
-class JWTResponse(BaseDTO):
-    access_token: str
-    refresh_token: str
 
 
 class WalletRequest(BaseDTO):

@@ -5,8 +5,8 @@ import jwt
 from fastapi import HTTPException
 
 from src.config import settings
+from src.modules.auth.dto import JWTPayload, JWTResponse
 from src.modules.users.constants import REFRESH_TOKEN_TYPE
-from src.modules.users.dto import JWTPayload, JWTResponse
 
 
 class JWT:
