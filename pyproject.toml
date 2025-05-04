@@ -108,3 +108,7 @@ strict_equality = true
 [[tool.mypy.overrides]]
 module = ["asyncpg.*", "TonTools.*", "tonsdk.*", "apscheduler.*", "tvm_valuetypes.*", "pytonlib.*", "pytoniq.*", "pytoniq_core.*"]
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+python_files = "tests_*.py test_*.py"
+asyncio_mode = "auto"
